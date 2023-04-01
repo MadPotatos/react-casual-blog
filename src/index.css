@@ -25,6 +25,16 @@ a:hover {
   height: 100vh;
 }
 
+button {
+  background-color: #ba2649;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  cursor: pointer;
+  border: 1px solid #ba2649;
+}
+
 .container {
   display: flex;
   flex-direction: column;
@@ -34,6 +44,23 @@ a:hover {
 .light {
   background-color: #f5f5f5;
   color: #000;
+}
+
+.dark {
+  background-color: #282c34;
+  color: #fff;
+}
+
+.dark button {
+  background-color: #282c34;
+}
+
+.dark a {
+  color: #ffa7ca;
+}
+
+.dark a:hover {
+  color: #ba2649;
 }
 
 .main {
