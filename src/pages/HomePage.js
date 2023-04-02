@@ -9,14 +9,27 @@ const reducer = (state, action) => {
             return {...state, loading: false, posts: action.payload, error: ''};
         case 'POSTS_FAIL':
             return {...state, loading: false, error: action.payload};
+            case 'USERS_REQUEST':
+                return {...state, loadingUsers: true};
+            case 'USERS_SUCCESS':
+                return {...state, loadingUsers: false, users: action.payload, errorUsers: ''};
+            case 'USERS_FAIL':
+                return {...state, loadingUsers: false, errorUsers: action.payload};
         default:
             return state;
     }
 };
 
 export default function HomePage() {
-    const [state, dispatch] = useReducer(reducer, {loading: false, posts: [], error: ''});
-    const{loading, posts, error} = state;
+    const [state, dispatch] = useReducer(reducer, {
+        loading: false, 
+        posts: [], 
+        error: '',
+        loadingUsers: false,
+        users: [],
+        errorUsers: ''
+    });
+    const{loading, posts, error, loadingUsers, errorUsers, users} = state;
     const loadPosts = async () => {
         dispatch({type: 'POSTS_REQUEST'});
         try {
@@ -26,8 +39,20 @@ export default function HomePage() {
             dispatch({type: 'POSTS_FAIL', payload: error.message});
         }
     };
+
+    const loadUsers = async () => {
+        dispatch({type: 'POSTS_REQUEST'});
+        try {
+            const {data} = await axios.get('https://jsonplaceholder.typicode.com/users');
+            dispatch({type: 'USERS_SUCCESS', payload: data});
+        } catch (error) {
+            dispatch({type: 'USERS_FAIL', payload: error.message});
+        }
+    };
+
     useEffect(() => {
         loadPosts();
+        loadUsers();
     }, []);
 
        
@@ -44,6 +69,16 @@ export default function HomePage() {
             </li>))}</ul>
             )}
         </div>
+        <div className='sidebar'>
+            <h1> Authors </h1>
+            {loadingUsers ? <div>Loading...</div> 
+            : errorUsers ? <div>{errorUsers}</div> 
+            : users.length === 0 ? <div>No users</div> 
+            : (<ul>{users.map((user => <li key={user.id}>
+                {user.name}
+            </li>))}</ul>
+            )}
+            </div>
         </div>
     );
 }
