@@ -1,5 +1,6 @@
 import React,{useEffect, useReducer} from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const reducer = (state, action) => {
     switch (action.type) {
@@ -64,7 +65,8 @@ export default function HomePage() {
             : error ? <div>{error}</div> 
             : posts.length === 0 ? <div>No posts</div> 
             : (<ul>{posts.map((post => <li key={post.id}>
-                <h2>{post.title}</h2>
+                <Link to = {`/post/${post.id}`}><h2>{post.title}</h2></Link>
+                
                 <p>{post.body}</p>
             </li>))}</ul>
             )}
