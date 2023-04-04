@@ -30,6 +30,13 @@ a {
   text-decoration: none;
 }
 
+input {
+  border: 1px solid #ba2649;
+  border-radius: 5px;
+  padding: 5px;
+  margin: 5px;
+}
+
 a:hover {
   color: #ffa7ca;
 }

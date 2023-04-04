@@ -1,6 +1,7 @@
 import React,{useEffect, useReducer} from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { useParams } from "react-router";
 
 const reducer = (state, action) => {
     switch (action.type) {
@@ -14,6 +15,8 @@ const reducer = (state, action) => {
                 return {...state, loadingUsers: true};
             case 'USERS_SUCCESS':
                 return {...state, loadingUsers: false, users: action.payload, errorUsers: ''};
+            case 'USER_SUCCESS':
+                return {...state, loadingUsers: false, user: action.payload, errorUsers: ''};
             case 'USERS_FAIL':
                 return {...state, loadingUsers: false, errorUsers: action.payload};
         default:
@@ -22,30 +25,42 @@ const reducer = (state, action) => {
 };
 
 export default function HomePage() {
+    const {query, userId} = useParams();
     const [state, dispatch] = useReducer(reducer, {
         loading: false, 
         posts: [], 
         error: '',
         loadingUsers: false,
         users: [],
+        user: {},
         errorUsers: ''
     });
-    const{loading, posts, error, loadingUsers, errorUsers, users} = state;
+    const{loading, posts, error, loadingUsers, errorUsers, users, user} = state;
+   
     const loadPosts = async () => {
         dispatch({type: 'POSTS_REQUEST'});
         try {
-            const {data} = await axios.get('https://jsonplaceholder.typicode.com/posts');
-            dispatch({type: 'POSTS_SUCCESS', payload: data});
+            const {data} = await axios.get(
+                
+                userId? 'https://jsonplaceholder.typicode.com/posts?userId=' + userId : 'https://jsonplaceholder.typicode.com/posts'
+                );
+            const filterPosts = query ? data.filter(x =>
+                x.title.indexOf(query) >= 0 ||
+               x.body.indexOf(query) >= 0) : data;
+            dispatch({type: 'POSTS_SUCCESS', payload: filterPosts});
         } catch (error) {
             dispatch({type: 'POSTS_FAIL', payload: error.message});
         }
     };
 
     const loadUsers = async () => {
-        dispatch({type: 'POSTS_REQUEST'});
+        dispatch({type: 'USERS_REQUEST'});
         try {
-            const {data} = await axios.get('https://jsonplaceholder.typicode.com/users');
-            dispatch({type: 'USERS_SUCCESS', payload: data});
+            const {data} = await axios.get(
+               
+                userId? 'https://jsonplaceholder.typicode.com/users/' + userId : 'https://jsonplaceholder.typicode.com/users'
+                );
+                dispatch({type: userId ? 'USER_SUCCESS' : 'USERS_SUCCESS', payload: data});
         } catch (error) {
             dispatch({type: 'USERS_FAIL', payload: error.message});
         }
@@ -54,13 +69,15 @@ export default function HomePage() {
     useEffect(() => {
         loadPosts();
         loadUsers();
-    }, []);
+    }, [query, userId]);  
 
        
     return (
         <div className='blog'>
             <div className='content'>
-            <h1> Posts </h1>
+            <h1>  {query? `Search results for "${query}"` : 
+                userId ? `${user.name}'s Posts` : 'All Posts'}
+             </h1>
             {loading ? <div>Loading...</div> 
             : error ? <div>{error}</div> 
             : posts.length === 0 ? <div>No posts</div> 
@@ -72,13 +89,27 @@ export default function HomePage() {
             )}
         </div>
         <div className='sidebar'>
-            <h1> Authors </h1>
             {loadingUsers ? <div>Loading...</div> 
             : errorUsers ? <div>{errorUsers}</div> 
             : users.length === 0 ? <div>No users</div> 
-            : (<ul>{users.map((user => <li key={user.id}>
-                {user.name}
+            : (
+                userId?
+                <div>
+                    <h2>{user.name}'s Profile</h2>
+                    <ul>
+                        <li><b>Email:</b> {user.email}</li>
+                        <li><b>Phone:</b> {user.phone}</li>
+                        <li><b>Website:</b> {user.website}</li>
+                </ul>
+                    </div>
+                :
+                <div>
+                       <h2> Authors </h2>
+                       <ul>{users.map((user => <li key={user.id}>
+                <Link to = {`/user/${user.id}`}>{user.name}</Link>
             </li>))}</ul>
+                       </div>
+            
             )}
             </div>
         </div>
