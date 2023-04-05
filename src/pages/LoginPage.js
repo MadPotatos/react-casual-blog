@@ -1,6 +1,7 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useContext, useEffect, useReducer, useState } from "react";
 import { Link, useNavigate  } from "react-router-dom";
 import axios from "axios";
+import { ThemeContext } from "../ThemeContext";
 
 
 const reducer = (state, action) => {
@@ -17,7 +18,11 @@ const reducer = (state, action) => {
 
 }
 export default function LoginPage() {
+    const {user, setUser} = useContext(ThemeContext);
     const navigate = useNavigate();
+    if (user) {
+        navigate("/profile");
+    }
     const [state, dispatch] = useReducer(reducer, {
         loading: false,
         loggedInUser: null,
@@ -47,6 +52,7 @@ export default function LoginPage() {
     }
     useEffect(() => {
         if (loggedInUser) {
+            setUser(loggedInUser);
             navigate("/profile");
         }
     }, [loggedInUser]);

@@ -8,7 +8,7 @@ export default function NavBar() {
         e.preventDefault();
         navigate(`/search/${query}`);
     }
-    const { theme, toggleTheme } = useContext(ThemeContext);
+    const { theme, toggleTheme, user } = useContext(ThemeContext);
     return (
         <div className="header">
             <div className="header-item">
@@ -24,7 +24,16 @@ export default function NavBar() {
                     </form>
                     </div>
             <div className="header-item">
+                {user? (
+                    <>
+                <NavLink to="/profile" activeClassName ="active">{user.name}</NavLink> 
+                <NavLink to="/create" activeClassName ="active">Create post</NavLink> 
+                </>
+                )
+                :
                 <NavLink to="/login" activeClassName ="active">Login</NavLink>
+            }
+               
                 <button onClick={toggleTheme}>
                     {theme === 'light'?'Theme:light':'Theme:dark'}
                 </button>
