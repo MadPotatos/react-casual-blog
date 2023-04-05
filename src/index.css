@@ -41,6 +41,10 @@ a:hover {
   color: #ffa7ca;
 }
 
+.active {
+  color: #ba2649;
+}
+
 #root {
   height: 100vh;
 }
@@ -121,4 +125,32 @@ button {
 .sidebar {
   flex: 1 25%;
   padding: 10px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  width: 800px;
+}
+
+.form-item {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 10px;
+}
+
+.form-item>label {
+  flex: 1 1 100px;
+}
+
+.form-item>input,
+.form-item>textarea,
+.form-item>span,
+.form-item>button {
+  flex: 5 1 300px;
+}
+
+
+.error {
+  color: red;
 }
