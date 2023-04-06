@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useReducer, useState } from "react";
 import { Link, useNavigate  } from "react-router-dom";
 import axios from "axios";
-import { ThemeContext } from "../ThemeContext";
+import { ThemeContext } from "../ThemeContext.js";
 
 
 const reducer = (state, action) => {

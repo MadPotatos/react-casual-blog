@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { ThemeContext } from "../ThemeContext";
+import { ThemeContext } from "../ThemeContext.js";
 import { Navigate, Route } from "react-router-dom";
 
 const PrivateRoute =({component: Component, ...rest}) => {

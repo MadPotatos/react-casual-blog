@@ -1,5 +1,5 @@
 import React,{useContext, useState} from 'react';
-import { ThemeContext } from '../ThemeContext';
+import { ThemeContext } from '../ThemeContext.js';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 export default function NavBar() {
     const [query,setQuery] = useState('');

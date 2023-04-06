@@ -1,13 +1,13 @@
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import React,{useContext} from 'react';
 import './App.css';
-import NavBar from './components/NavBar';
-import { ThemeContext } from './ThemeContext';
-import HomePage from './pages/HomePage';
-import PostPage from './pages/PostPage';
-import LoginPage from './pages/LoginPage';
-import ProfilePage from './pages/ProfilePage';
-import PrivateRoute from './components/PrivateRoute';
+import NavBar from './components/NavBar.js';
+import { ThemeContext } from './ThemeContext.js';
+import HomePage from './pages/HomePage.js';
+import PostPage from './pages/PostPage.js';
+import LoginPage from './pages/LoginPage.js';
+import ProfilePage from './pages/ProfilePage.js';
+import PrivateRoute from './components/PrivateRoute.js';
 
 function App() {
   const { theme } = useContext(ThemeContext);
