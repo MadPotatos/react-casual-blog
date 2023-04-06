@@ -88,6 +88,12 @@ button {
   color: #ba2649;
 }
 
+.dark input {
+  border: 1px solid #ffa7ca;
+  background-color: #282c34;
+  color: #fff;
+}
+
 .main {
   padding: 10px;
   flex: auto;

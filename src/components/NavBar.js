@@ -1,6 +1,9 @@
 import React,{useContext, useState} from 'react';
 import { ThemeContext } from '../ThemeContext';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faLightbulb } from '@fortawesome/free-solid-svg-icons';
+
 export default function NavBar() {
     const [query,setQuery] = useState('');
     const navigate = useNavigate();
@@ -26,7 +29,9 @@ export default function NavBar() {
             <div className="header-item">
                 <NavLink to="/login" activeClassName ="active">Login</NavLink>
                 <button onClick={toggleTheme}>
-                    {theme === 'light'?'Theme:light':'Theme:dark'}
+                {theme === 'light'
+                     ? <FontAwesomeIcon icon={faLightbulb} />
+                    : <FontAwesomeIcon icon={faLightbulb} />}
                 </button>
             </div>
             </div>
