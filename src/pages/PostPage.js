@@ -29,8 +29,8 @@ export default function PostPage() {
         const fetchPost = async () => {
             dispatch({type: 'POST_REQUEST'});
             try {
-                const {data} = await axios.get(`https://jsonplaceholder.typicode.com/posts/${postId}`);
-                const {data: userData} = await axios.get(`https://jsonplaceholder.typicode.com/users/${data.userId}`);
+                const {data} = await axios.get(`/api/posts/${postId}`);
+                const {data: userData} = await axios.get(`/api/users/${data.userId}`);
                 dispatch({type: 'POST_SUCCESS', payload: {...data,user : userData}});
             } catch (error) {
                 dispatch({type: 'POST_FAIL', payload: error.message});

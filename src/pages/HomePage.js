@@ -42,7 +42,7 @@ export default function HomePage() {
         try {
             const {data} = await axios.get(
                 
-                userId? 'https://jsonplaceholder.typicode.com/posts?userId=' + userId : 'https://jsonplaceholder.typicode.com/posts'
+                userId? 'api/posts?userId=' + userId : 'api/posts'
                 );
             const filterPosts = query ? data.filter(x =>
                 x.title.indexOf(query) >= 0 ||
