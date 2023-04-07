@@ -21,14 +21,20 @@ function App() {
   return (
     <Router>
       <nav>
-        <Link to="/"> Home </Link>
-
+      <div className="nav-item">
+        <Link to="/"> Casual Blog </Link>
+      </div>
+        
         {!isAuth ? (
+          <div className="nav-item">
           <Link to="/login"> Login </Link>
+          </div>
         ) : (
-          <>
-            <Link to="/createpost"> Create Post </Link>
-            <button onClick={signUserOut}> Log Out</button>
+          <>        
+          <div className="nav-item">           
+          <Link to="/createpost"> Create Post </Link>
+            <button className="logout-btn" onClick={signUserOut}> Log Out</button>
+          </div>
           </>
         )}
       </nav>
