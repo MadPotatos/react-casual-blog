@@ -1,95 +1,56 @@
-import axios from "axios";
-import React, { useReducer, useState, useContext } from "react";
-import { ThemeContext } from '../ThemeContext.js';
+import React, { useState, useEffect } from "react";
+import { addDoc, collection } from "firebase/firestore";
+import { db, auth } from "../firebase-config";
+import { useNavigate } from "react-router-dom";
 
+function CreatePost({ isAuth }) {
+  const [title, setTitle] = useState("");
+  const [postText, setPostText] = useState("");
 
-const initialState = {
-    loading: false,
-    createdPost: null,
-    error: '',
-    success: false
-};
+  const postsCollectionRef = collection(db, "posts");
+  let navigate = useNavigate();
 
-const reducer = (state, action) => {
-    switch (action.type) {
-        case 'RESET_FORM':
-            return initialState;
-        case 'CREATE_POST_REQUEST':
-            return {...state, loading: true};
-        case 'CREATE_POST_SUCCESS':
-            return {...state, loading: false, createdPost: action.payload, error: '', success: true};
-        case 'CREATE_POST_FAIL':
-            return {...state, loading: false, error: action.payload, success: false};
-        default:
-            return state;
+  const createPost = async () => {
+    await addDoc(postsCollectionRef, {
+      title,
+      postText,
+      author: { name: auth.currentUser.displayName, id: auth.currentUser.uid },
+    });
+    navigate("/");
+  };
+
+  useEffect(() => {
+    if (!isAuth) {
+      navigate("/login");
     }
+  }, []);
+
+  return (
+    <div className="createPostPage">
+      <div className="cpContainer">
+        <h1>Create A Post</h1>
+        <div className="inputGp">
+          <label> Title:</label>
+          <input
+            placeholder="Title..."
+            onChange={(event) => {
+              setTitle(event.target.value);
+            }}
+          />
+        </div>
+        <div className="inputGp">
+          <label> Post:</label>
+          <textarea
+            placeholder="Post..."
+            onChange={(event) => {
+              setPostText(event.target.value);
+            }}
+          />
+        </div>
+        <button onClick={createPost}> Submit Post</button>
+      </div>
+    </div>
+  );
 }
 
-export default function CreatePostPage() {
-    const {backendAPI,user} = useContext(ThemeContext);
-    const [state, dispatch] = useReducer(reducer, initialState);
-    const {loading, createdPost, error, success} = state;
-    const [title, setTitle] = useState("");
-    const [body, setBody] = useState("");
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        dispatch({type: 'CREATE_POST_REQUEST'});
-        try{
-            const data = axios.post(`${backendAPI}/posts`, {
-                title,
-                 body,
-                userId: user.id,
-                id: Math.floor(Math.random() * 100000)
-            });
-            dispatch({type: 'CREATE_POST_SUCCESS', payload: data});
-        }
-        catch(error) {
-            dispatch({type: 'CREATE_POST_FAIL', payload: error.message});
-        }
-    }
-    return (
-        <div>
-        <h1>Create Post</h1>
-        {
-            success? (<div className="form-item"><p>Post created successfully</p>
-            <button onClick={() => dispatch({type: 'RESET_FORM'})}>Create another post</button>
-            </div> 
-            
-            ) : (
-                <form className="form" onSubmit={handleSubmit}>
-            <div className="form-item">
-                <label htmlFor="title">Title: </label>
-                    <input name ="title" type="text" id="title" 
-                        onChange = {e => setTitle(e.target.value)}></input>
-                    </div>
-                        <div className="form-item">
-                            <label htmlFor="body">Body: </label>
-                                <input name ="body" type="body" id="title" 
-                                    onChange = {e => setBody(e.target.value)}></input>
-                                    </div>
-                            <div className="form-item">
-                            <label></label>
-                            <button>Create Post</button>
-                                </div>
-                {
-                    loading && <div className="form-item">Loading...
-                    <label></label>
-                    <span>Loading...</span>
-                    </div>
-
-                }
-                {
-                    error && <div className="form-item">
-                    <label></label>
-                    <span className="error">{error}</span>
-                    </div>
-                }
-                    </form> 
-            )
-            
-        }
-        
-
-        </div>
-    );
-    }
+export default CreatePost;

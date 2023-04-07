@@ -1,7 +1,5 @@
 {
   "name": "react-casual-blog",
-  "type": "module",
-  "proxy": "http://127.0.0.1:5000",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -11,6 +9,7 @@
     "axios": "^1.3.4",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "firebase": "^9.19.1",
     "mongoose": "^7.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

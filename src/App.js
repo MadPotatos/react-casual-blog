@@ -1,42 +1,43 @@
-import {BrowserRouter, Route, Routes} from 'react-router-dom';
-import React,{useContext} from 'react';
-import './App.css';
-import NavBar from './components/NavBar.js';
-import { ThemeContext } from './ThemeContext.js';
-import HomePage from './pages/HomePage.js';
-import PostPage from './pages/PostPage.js';
-import LoginPage from './pages/LoginPage.js';
-import ProfilePage from './pages/ProfilePage.js';
-import PrivateRoute from './components/PrivateRoute.js';
-import CreatePostPage from './pages/CreatePostPage.js';
-import RegisterPage from './pages/RegisterPage.js';
+import "./App.css";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import Home from "./pages/HomePage";
+import CreatePost from "./pages/CreatePostPage";
+import Login from "./pages/LoginPage";
+import { useState } from "react";
+import { signOut } from "firebase/auth";
+import { auth } from "./firebase-config";
 
 function App() {
-  const { theme } = useContext(ThemeContext);
-  return (  
-    <BrowserRouter>
-    <div className={`container ${theme}`}>
-      <NavBar />
-      <div className="main">
-        <Routes>
-         
-            <Route element={<PrivateRoute />}>
-              <Route path="/profile" element={<ProfilePage />} />
-              <Route path="/create" element={<CreatePostPage />} />
-            </Route>
-          
-            <Route path="/login" element = {<LoginPage />} />
-            <Route path="/register" element = {<RegisterPage />} />
-          <Route path="/post/:postId" element = {<PostPage />} /> 
-            <Route path="/search/:query?" element = {<HomePage />} />  
-            <Route path="/user/:userId" element = {<HomePage />} />         
-          <Route path="/" element = {<HomePage />} />      
-            </Routes>
-       
-      </div>
-      <div className="footer"> Nguyen Tien Viet - 20194718 </div>
-    </div>
-    </BrowserRouter>
+  const [isAuth, setIsAuth] = useState(localStorage.getItem("isAuth"));
+
+  const signUserOut = () => {
+    signOut(auth).then(() => {
+      localStorage.clear();
+      setIsAuth(false);
+      window.location.pathname = "/login";
+    });
+  };
+
+  return (
+    <Router>
+      <nav>
+        <Link to="/"> Home </Link>
+
+        {!isAuth ? (
+          <Link to="/login"> Login </Link>
+        ) : (
+          <>
+            <Link to="/createpost"> Create Post </Link>
+            <button onClick={signUserOut}> Log Out</button>
+          </>
+        )}
+      </nav>
+      <Routes>
+        <Route path="/" element={<Home isAuth={isAuth} />} />
+        <Route path="/createpost" element={<CreatePost isAuth={isAuth} />} />
+        <Route path="/login" element={<Login setIsAuth={setIsAuth} />} />
+      </Routes>
+    </Router>
   );
 }
 

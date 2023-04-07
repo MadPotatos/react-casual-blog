@@ -1,87 +1,27 @@
-import React, { useContext, useEffect, useReducer, useState } from "react";
-import { Link, useNavigate  } from "react-router-dom";
-import axios from "axios";
-import { ThemeContext } from "../ThemeContext.js";
+import React from "react";
+import { auth, provider } from "../firebase-config";
+import { signInWithPopup } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 
+function Login({ setIsAuth }) {
+  let navigate = useNavigate();
 
-const reducer = (state, action) => {
-    switch (action.type) {
-        case 'LOGIN_REQUEST':
-            return {...state, loading: true};
-        case 'LOGIN_SUCCESS':
-            return {...state, loading: false, loggedInUser: action.payload, error: ''};
-        case 'LOGIN_FAIL':
-            return {...state, loading: false, error: action.payload};
-        default:
-            return state;
-    }
-
-}
-export default function LoginPage() {
-    const {user, setUser,backendAPI} = useContext(ThemeContext);
-    const navigate = useNavigate();
-    if (user) {
-        navigate("/profile");
-    }
-    const [state, dispatch] = useReducer(reducer, {
-        loading: false,
-        loggedInUser: null,
-        error: ''
+  const signInWithGoogle = () => {
+    signInWithPopup(auth, provider).then((result) => {
+      localStorage.setItem("isAuth", true);
+      setIsAuth(true);
+      navigate("/");
     });
-    const {loading, loggedInUser, error} = state;
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+  };
 
-    const handleSubmit = async(e) => {
-        e.preventDefault();
-        dispatch({type: 'LOGIN_REQUEST'});
-        try{    
-            const{data} = await axios(`${backendAPI}/users?email=${email}&password=${password}`);
-            if(data.length > 0) {
-                localStorage.setItem('user', JSON.stringify(data[0]));
-                dispatch({type: 'LOGIN_SUCCESS', payload: data[0]});
-            }
-            else {
-                console.log('data:', data);
-                dispatch({type: 'LOGIN_FAIL', payload: 'Invalid email or password'});
-            }
-        }
-        catch(error) {
-            dispatch({type: 'LOGIN_FAIL', payload: error.message});
-        }
+  return (
+    <div className="loginPage">
+      <p>Sign In With Google to Continue</p>
+      <button className="login-with-google-btn" onClick={signInWithGoogle}>
+        Sign in with Google
+      </button>
+    </div>
+  );
+}
 
-
-    }
-    useEffect(() => {
-        if (loggedInUser) {
-            setUser(loggedInUser);
-            return navigate("/profile");
-        }
-    }, [loggedInUser,backendAPI]);
-
-    return (
-        <div>
-        <h1>Login</h1>
-        <form onSubmit={handleSubmit} className ="form"> 
-            <div className="form-item">
-                <label htmlFor="email">Email</label>
-                <input name="email" id="email" type="email" required onChange={e => setEmail(e.target.value)} />
-                </div>
-                <div className="form-item">
-                <label htmlFor="password">Password</label>
-                <input name="password" id="password" type="password" required onChange={e => setPassword(e.target.value)} />
-                </div>
-                <div className="form-item">
-                    <label></label>
-                <button>Login</button>
-                </div>
-                {loading && <div className="form-item"><label></label>Loading...</div>}
-                {error && <div className="form-item"><label></label><span  className="error">{error}</span></div>}
-                <div className="form-item">
-                <label></label>
-                    <span>Don't have account? <Link to="/register">Register</Link></span>
-                </div>
-                </form>
-        </div>
-    );
-    }
+export default Login;
