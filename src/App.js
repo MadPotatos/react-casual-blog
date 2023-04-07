@@ -9,6 +9,7 @@ import LoginPage from './pages/LoginPage.js';
 import ProfilePage from './pages/ProfilePage.js';
 import PrivateRoute from './components/PrivateRoute.js';
 import CreatePostPage from './pages/CreatePostPage.js';
+import RegisterPage from './pages/RegisterPage.js';
 
 function App() {
   const { theme } = useContext(ThemeContext);
@@ -25,6 +26,7 @@ function App() {
             </Route>
           
             <Route path="/login" element = {<LoginPage />} />
+            <Route path="/register" element = {<RegisterPage />} />
           <Route path="/post/:postId" element = {<PostPage />} /> 
             <Route path="/search/:query?" element = {<HomePage />} />  
             <Route path="/user/:userId" element = {<HomePage />} />         
