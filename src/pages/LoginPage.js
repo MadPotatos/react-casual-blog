@@ -18,7 +18,7 @@ const reducer = (state, action) => {
 
 }
 export default function LoginPage() {
-    const {user, setUser} = useContext(ThemeContext);
+    const {user, setUser,backendAPI} = useContext(ThemeContext);
     const navigate = useNavigate();
     if (user) {
         navigate("/profile");
@@ -36,11 +36,12 @@ export default function LoginPage() {
         e.preventDefault();
         dispatch({type: 'LOGIN_REQUEST'});
         try{    
-            const{data} = await axios.post(`http://jsonplaceholder.typicode.com/users?email=${email}&password=${password}`);
+            const{data} = await axios(`${backendAPI}/users?email=${email}&password=${password}`);
             if(data.length > 0) {
                 dispatch({type: 'LOGIN_SUCCESS', payload: data[0]});
             }
             else {
+                console.log('data:', data);
                 dispatch({type: 'LOGIN_FAIL', payload: 'Invalid email or password'});
             }
         }
@@ -53,9 +54,9 @@ export default function LoginPage() {
     useEffect(() => {
         if (loggedInUser) {
             setUser(loggedInUser);
-            navigate("/profile");
+            return navigate("/profile");
         }
-    }, [loggedInUser]);
+    }, [loggedInUser,backendAPI]);
 
     return (
         <div>

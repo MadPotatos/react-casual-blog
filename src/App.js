@@ -17,9 +17,11 @@ function App() {
       <NavBar />
       <div className="main">
         <Routes>
-          <Route element = {<PrivateRoute />}>
-            <Route path = "/profile" element = {<ProfilePage />} />
-          </Route>
+         
+            <Route element={<PrivateRoute />}>
+              <Route path="/profile" element={<ProfilePage />} />
+            </Route>
+          
             <Route path="/login" element = {<LoginPage />} />
           <Route path="/post/:postId" element = {<PostPage />} /> 
             <Route path="/search/:query?" element = {<HomePage />} />  

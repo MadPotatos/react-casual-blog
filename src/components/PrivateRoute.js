@@ -1,15 +1,11 @@
 import { useContext } from "react";
 import { ThemeContext } from "../ThemeContext.js";
-import { Navigate, Route } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 
-const PrivateRoute =({component: Component, ...rest}) => {
+const PrivateRoute =() => {
   const {user} = useContext(ThemeContext);
   return (
-    <Route    render={(props) => (
-      user
-        ? <Component {...props} />
-        : <Navigate to='/login' replace/>
-    )} />
+    user ? <Outlet /> : <Navigate to="/login" />
   )
 };
 

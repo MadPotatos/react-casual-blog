@@ -1,7 +1,8 @@
-import React,{useEffect, useReducer} from 'react';
+import React,{useEffect, useReducer,useContext} from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { useParams } from "react-router";
+import { ThemeContext } from '../ThemeContext.js';
 
 const reducer = (state, action) => {
     switch (action.type) {
@@ -25,6 +26,7 @@ const reducer = (state, action) => {
 };
 
 export default function HomePage() {
+    const {backendAPI} = useContext(ThemeContext);
     const {query, userId} = useParams();
     const [state, dispatch] = useReducer(reducer, {
         loading: false, 
@@ -42,7 +44,9 @@ export default function HomePage() {
         try {
             const {data} = await axios.get(
                 
-                userId? 'api/posts?userId=' + userId : 'api/posts'
+                userId
+                ? `${backendAPI}/posts?userId=${userId}`
+                : `${backendAPI}/posts`
                 );
             const filterPosts = query ? data.filter(x =>
                 x.title.indexOf(query) >= 0 ||
@@ -58,7 +62,9 @@ export default function HomePage() {
         try {
             const {data} = await axios.get(
                
-                userId? 'api/users/' + userId : 'api/users'
+                userId
+                ? `${backendAPI}/users/${userId}`
+                : `${backendAPI}/users`
                 );
                 dispatch({type: userId ? 'USER_SUCCESS' : 'USERS_SUCCESS', payload: data});
         } catch (error) {
@@ -69,7 +75,7 @@ export default function HomePage() {
     useEffect(() => {
         loadPosts();
         loadUsers();
-    }, [query, userId]);  
+    }, [query, userId,backendAPI]);  
 
        
     return (

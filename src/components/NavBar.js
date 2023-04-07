@@ -8,7 +8,7 @@ export default function NavBar() {
         e.preventDefault();
         navigate(`/search/${query}`);
     }
-    const { theme, toggleTheme, user } = useContext(ThemeContext);
+    const { theme, toggleTheme, user, backendAPI,toggleBackendAPI} = useContext(ThemeContext);
     return (
         <div className="header">
             <div className="header-item">
@@ -36,6 +36,9 @@ export default function NavBar() {
                
                 <button onClick={toggleTheme}>
                     {theme === 'light'?'Theme:light':'Theme:dark'}
+                </button>
+                <button onClick={toggleBackendAPI}>
+                    {backendAPI === '/api'?'Backend:local':'Backend:mock'}
                 </button>
             </div>
             </div>
