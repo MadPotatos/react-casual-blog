@@ -8,6 +8,7 @@ import PostPage from './pages/PostPage.js';
 import LoginPage from './pages/LoginPage.js';
 import ProfilePage from './pages/ProfilePage.js';
 import PrivateRoute from './components/PrivateRoute.js';
+import CreatePostPage from './pages/CreatePostPage.js';
 
 function App() {
   const { theme } = useContext(ThemeContext);
@@ -20,6 +21,7 @@ function App() {
          
             <Route element={<PrivateRoute />}>
               <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/create" element={<CreatePostPage />} />
             </Route>
           
             <Route path="/login" element = {<LoginPage />} />
