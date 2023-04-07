@@ -154,3 +154,7 @@ button {
 .error {
   color: red;
 }
+
+.success {
+  color: #40c040;
+}

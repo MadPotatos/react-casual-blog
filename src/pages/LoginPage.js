@@ -38,6 +38,7 @@ export default function LoginPage() {
         try{    
             const{data} = await axios(`${backendAPI}/users?email=${email}&password=${password}`);
             if(data.length > 0) {
+                localStorage.setItem('user', JSON.stringify(data[0]));
                 dispatch({type: 'LOGIN_SUCCESS', payload: data[0]});
             }
             else {
