@@ -1,6 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import path from 'path';
 
 dotenv.config();
 const app = express();
@@ -129,6 +130,10 @@ app.get("/api/seed", async (req, res) => {
 ]);
     res.send({message: "Seed is successful"});
 });
+
+const dirname = path.resolve();
+app.use('/', express.static(dirname + '/build'));
+app.get('/', (req, res) => res.sendFile(dirname + '/build/index.html'));
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
